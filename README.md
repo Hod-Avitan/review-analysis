@@ -2,365 +2,124 @@
 
 ## Overview
 
-Review Intelligence Agent is a proof-of-concept system designed to transform large volumes of app store reviews into actionable product insights.
+Review Intelligence Agent is a proof-of-concept application that analyzes app store reviews using AI and presents aggregated insights for product teams.
 
-The goal is to help product teams understand recurring user problems, identify release-related issues, prioritize critical reviews, and reduce manual review analysis.
+The goal of the tool is to help identify recurring issues, understand user sentiment, detect potential release-related problems, and prioritize reviews that may require human attention.
 
-The system uses AI-based review classification combined with aggregation and visualization layers to move from individual reviews to portfolio-level insights.
-
----
-
-# Problem
-
-Mobile apps receive hundreds or thousands of reviews across different apps, countries, languages, and versions.
-
-Reading reviews one by one makes it difficult to identify:
-
-- Recurring bugs
-- Feature requests
-- Release regressions
-- Performance issues
-- Payment/account problems
-- Reviews requiring personal attention
-
-The challenge is turning unstructured user feedback into structured product decisions.
+Instead of reviewing feedback manually one review at a time, the system processes reviews, extracts structured information, and groups similar issues into meaningful themes.
 
 ---
 
-# Solution
+## Features
 
-The system analyzes reviews through an AI-powered pipeline:
-
-```
-App Store Reviews
-        |
-        ↓
-Review Classification Agent
-        |
-        ↓
-Structured Review Data
-        |
-        ↓
-Insights & Prioritization Dashboard
-        |
-        ↓
-Human Escalation / Automated Reply Suggestions
-```
-
----
-
-# Features
-
-## 1. Review Analysis Agent
+### AI Review Analysis
 
 Each review is analyzed and enriched with:
-
 - Category
 - Theme
 - Issue summary
 - Sentiment
 - Severity
 - Suggested action
-- Human reply requirement
+- Human reply recommendation
 
-Example:
-
-Input:
-
-> "The game crashes every time I open it after the latest update"
-
-Output:
-
-```json
-{
-  "category": "Bug",
-  "theme": "Crash",
-  "issue_summary": "Crash occurs immediately after launching the app",
-  "sentiment": "Negative",
-  "severity": "Critical",
-  "requires_human_reply": true,
-  "suggested_action": "Investigate bug"
-}
-```
-
----
-
-## 2. Theme Normalization
-
-A key challenge in review analysis is that users describe the same problem differently.
-
-Examples:
-
-```
-"App crashes on startup"
-"Game closes immediately"
-"Crash after update"
-```
-
-are grouped into:
-
-```
-Theme: Crash
-```
-
-This allows meaningful aggregation and prevents fragmented insights.
-
----
-
-## 3. Product Insights Dashboard
-
-The dashboard provides multiple levels of analysis:
-
-### Review Level
-
-Shows every review enriched with AI-generated analysis.
-
-### Portfolio Level
-
-Identifies the most common issues across all apps.
-
-Example:
-
-| Theme | Severity | Count |
-|---|---|---|
-| Crash | Critical | 25 |
-| Performance | High | 18 |
-| Login Issue | High | 12 |
-
----
-
-### App Level
-
-Compares issues across different applications.
-
-Example:
-
-| App | Theme | Count |
-|---|---|---|
-| Game A | Crash | 12 |
-| Game B | Payment | 8 |
-
----
-
-### Release Impact Analysis
-
-Identifies issues associated with specific app versions.
-
-Example:
-
-| Version | Theme | Count |
-|---|---|---|
-| 5.8.0 | Crash | 15 |
-| 5.8.0 | Performance | 10 |
-
-This helps identify possible regressions after releases.
-
----
-
-## 4. Human-in-the-loop Workflow
-
-Not every review requires manual handling.
-
-The system identifies reviews that need human attention:
-
-Examples:
-
-- 1-star reviews
-- Account access issues
+Example insights:
+- Crash-related issues
+- Performance complaints
 - Payment problems
-- Lost progress
-- Highly frustrated users
-
-These reviews are separated into a dedicated queue.
+- Feature requests
+- Account-related issues
 
 ---
 
-## 5. Automated Reply Suggestions
+### Issue Aggregation
 
-For lower-risk reviews, the system generates suggested responses.
+The application groups similar user feedback into common themes.
+For example:
+- "App crashes on startup"
+- "Game closes immediately"
+- "Crash after update"
 
-Examples:
+are grouped under a common theme such as:
+`Crash`
+This helps identify recurring problems instead of isolated reviews.
+---
 
-- Positive feedback
-- General comments
-- Non-critical complaints
+### Product Insights Dashboard
 
-Critical cases remain under human review.
+The dashboard provides different views of the analyzed reviews:
+- Review-level analysis
+- Issues by application
+- Issues by release version
+- Common themes
+- Severity distribution
+- Reviews requiring human attention
+- AI-generated reply suggestions
 
 ---
 
-# Architecture
-
-```
-                 Excel Reviews Dataset
-                         |
-                         ↓
-              Review Classification Agent
-                         |
-                         ↓
-              Structured Review Dataset
-                         |
-        ---------------------------------
-        |               |               |
-        ↓               ↓               ↓
-   App Insights   Release Analysis   Human Queue
-        |
-        ↓
- Automated Reply Suggestions
-```
+## Project Structure
+.
+├── app.py                  # Streamlit application
+├── review_agent.py         # AI review analysis logic
+├── insights_agent.py       # Aggregation and insights generation
+├── reply_agent.py          # AI reply suggestions
+├── requirements.txt
+└── sample_reviews.xlsx     # Example input dataset
 
 ---
 
-# Technology Stack
-
+## Technology Stack
 - Python
 - Streamlit
 - OpenAI API
 - Pandas
 - OpenPyXL
-- dotenv
+- python-dotenv
 
 ---
 
-# Running the Project
+## Running the Project
 
-## 1. Clone repository
-
-```bash
+### 1. Clone the repository
 git clone <repository-url>
-```
 
-## 2. Create virtual environment
-
-```bash
+### 2. Create a virtual environment
 python -m venv venv
-```
 
 Activate:
-
 Mac/Linux:
-
-```bash
 source venv/bin/activate
-```
 
 Windows:
-
-```bash
 venv\Scripts\activate
-```
 
----
 
-## 3. Install dependencies
-
-```bash
+### 3. Install dependencies
 pip install -r requirements.txt
-```
 
----
 
-## 4. Configure API Key
-
+### 4. Configure environment variables
 Create a `.env` file:
-
-```
 OPENAI_API_KEY=your_api_key_here
-```
 
----
-
-## 5. Run application
-
-```bash
+### 5. Run the application
 streamlit run app.py
-```
 
 ---
 
-# Input Dataset Format
-
-The application expects an Excel file with the following columns:
-
+## Input Format
+The application accepts an Excel file containing app store reviews.
+Required columns:
 | Column | Description |
 |---|---|
 | app | Application name |
 | country | Review country |
 | date | Review date |
-| version | App version |
-| rating | User rating |
+| version | Application version |
+| rating | Review rating |
 | language | Review language |
 | review_text | Review content |
 
----
-
-# Production Considerations
-
-This proof-of-concept uses uploaded Excel files for simplicity.
-
-A production implementation could include:
-
-## Data ingestion
-
-Connect directly to:
-
-- Google Play Reviews API
-- App Store Connect API
-
-for continuous review collection.
-
----
-
-## Storage
-
-Persist reviews and analysis results in:
-
-- PostgreSQL
-- BigQuery
-- Data warehouse solution
-
----
-
-## Processing
-
-Move analysis into an asynchronous pipeline:
-
-```
-New Review
-     |
-     ↓
-Queue
-     |
-     ↓
-AI Processing Worker
-     |
-     ↓
-Database
-     |
-     ↓
-Dashboard
-```
-
----
-
-## Product Workflow Integration
-
-Future extensions:
-
-- Automatically create Jira tickets for confirmed bugs
-- Notify responsible teams
-- Track issue trends over releases
-- Compare apps and markets
-
----
-
-# Why this approach
-
-The system focuses on reducing noise and helping product teams answer:
-
-- What problems are users experiencing?
-- Is a new release causing issues?
-- Which problems impact the most users?
-- Which reviews require immediate attention?
-
-The objective is not only to analyze reviews, but to turn user feedback into actionable product decisions.
+## Status
+This project is a proof-of-concept implementation.
