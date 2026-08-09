@@ -13,7 +13,10 @@ from insights_agent import (
 from reply_agent import generate_reply
 @st.cache_data(show_spinner=False)
 def analyze_reviews(df_json):
-    df = pd.read_json(df_json)
+    df = pd.read_json(
+        df_json,
+        orient="records"
+    )
     results = []
     progress_bar = st.progress(0)
     status_text = st.empty()
