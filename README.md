@@ -101,7 +101,7 @@ pip install -r requirements.txt
 
 ### 4. Configure environment variables
 Create a `.env` file:
-OPENAI_API_KEY=your_api_key_here
+OPENAI_API_KEY=api_key
 
 ### 5. Run the application
 streamlit run app.py
