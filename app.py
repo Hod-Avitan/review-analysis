@@ -76,8 +76,8 @@ if uploaded_file is not None:
             df["language"].nunique()
         )
     with st.expander("Review Dataset Preview"):
-    st.dataframe(df.head(10))
-    st.success(f"Loaded {len(df)} reviews")
+        st.dataframe(df.head(10))
+        st.success(f"Loaded {len(df)} reviews")
 
     if st.button("Analyze Reviews"):
         with st.spinner("Analyzing reviews..."):
