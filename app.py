@@ -12,11 +12,7 @@ from insights_agent import (
 )
 from reply_agent import generate_reply
 @st.cache_data(show_spinner=False)
-def analyze_reviews(df_json):
-    df = pd.read_json(
-        df_json,
-        orient="records"
-    )
+def analyze_reviews(df):
     results = []
     progress_bar = st.progress(0)
     status_text = st.empty()
@@ -84,7 +80,7 @@ if uploaded_file is not None:
 
     if st.button("Analyze Reviews"):
         with st.spinner("Analyzing reviews..."):
-            analysis_df = analyze_reviews(df.to_json())
+            analysis_df = analyze_reviews(df)
 
         final_df = pd.concat([df.reset_index(drop=True),analysis_df.reset_index(drop=True)], axis=1)
         st.session_state["final_df"] = final_df
